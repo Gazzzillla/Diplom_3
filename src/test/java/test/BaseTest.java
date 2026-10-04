@@ -11,10 +11,7 @@ public class BaseTest {
 
     protected WebDriver driver;
 
-    private static final String CHROME_DRIVER =
-            "C:\\WebDriver\\chromedriver-win64\\chromedriver.exe";
-
-    private static final String YANDEX_BROWSER =
+    private static final String DEFAULT_YANDEX_BROWSER_PATH =
             "C:\\Program Files\\Yandex\\YandexBrowser\\Application\\browser.exe";
 
     @Before
@@ -24,15 +21,18 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
 
         if ("yandex".equals(browser)) {
-            System.clearProperty("webdriver.chrome.driver");
-
             WebDriverManager.chromedriver()
                     .browserVersion("150")
                     .setup();
 
-            options.setBinary(YANDEX_BROWSER);
+            String yandexBrowserPath = System.getProperty(
+                    "yandex.path",
+                    DEFAULT_YANDEX_BROWSER_PATH
+            );
+
+            options.setBinary(yandexBrowserPath);
         } else {
-            System.setProperty("webdriver.chrome.driver", CHROME_DRIVER);
+            WebDriverManager.chromedriver().setup();
         }
 
         driver = new ChromeDriver(options);
